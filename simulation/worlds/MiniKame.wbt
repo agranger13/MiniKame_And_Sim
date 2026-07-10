@@ -7,8 +7,8 @@ EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/project
 WorldInfo {
 }
 Viewpoint {
-  orientation 0.134115867954145 0.113442598084638 -0.9844509692730834 1.752814844893078
-  position 0.052224626875500696 0.42292985779022035 0.13471994596989811
+  orientation 0.2720783118103268 0.2570969031267978 -0.9272942222644615 1.7025123846798607
+  position 0.02293441976408503 0.3573438725305786 0.2734620362840154
 }
 TexturedBackground {
 }
@@ -17,10 +17,12 @@ TexturedBackgroundLight {
 RectangleArena {
 }
 Robot {
+  translation 0 0 0.05
   children [
     HingeJoint {
       jointParameters HingeJointParameters {
-        anchor 0.025 0.02 0.04
+        axis 0 0 1
+        anchor 0.02 0.02 0.05
       }
       device [
         PositionSensor {
@@ -35,8 +37,8 @@ Robot {
         }
       ]
       endPoint Solid {
-        translation 0.025 0.02 0.04
-        rotation 1 0 0 0
+        translation 0.03499999999999989 0.020000000000000122 -1.3877787807814457e-17
+        rotation -1.5700932591295433e-16 -0.9999999999999999 -1.5210278447817451e-16 1.5707953071795846
         children [
           DEF UPPER_LEG Shape {
             appearance PBRAppearance {
@@ -51,7 +53,7 @@ Robot {
           HingeJoint {
             jointParameters HingeJointParameters {
               axis 0 1 0
-              anchor 0.01 0 -0.02
+              anchor 0 0 -0.01
             }
             device [
               PositionSensor {
@@ -66,10 +68,10 @@ Robot {
               }
             ]
             endPoint Solid {
-              translation 0.01 0 -0.02
+              translation 1.962405932198763e-16 -2.775557561562893e-17 -0.029999999999999978
               rotation 0 1 0 0
               children [
-                Shape {
+                DEF LOWER_LEG Shape {
                   appearance PBRAppearance {
                     baseColor 0.333333 0.666667 1
                     roughness 1
@@ -81,7 +83,7 @@ Robot {
                 }
               ]
               name "lower_leg1"
-              boundingObject USE UPPER_LEG
+              boundingObject USE LOWER_LEG
               physics Physics {
               }
             }
@@ -93,8 +95,65 @@ Robot {
         }
       }
     }
+    HingeJoint {
+      jointParameters HingeJointParameters {
+        axis 0 0 1
+        anchor -0.02 0.02 0.05
+      }
+      device [
+        PositionSensor {
+          name "hip_sensor2"
+        }
+        RotationalMotor {
+          name "hip_motor2"
+          maxVelocity 8.7
+          minPosition -1.57
+          maxPosition 1.57
+          maxTorque 0.176
+        }
+      ]
+      endPoint Solid {
+        translation -0.034999999999999996 0.02 2.7755575615628914e-17
+        rotation 1.5700895750559034e-16 1 -7.850447875279517e-17 1.5707999999999998
+        children [
+          USE UPPER_LEG
+          HingeJoint {
+            jointParameters HingeJointParameters {
+              axis 0 1 0
+              anchor 0 0 -0.01
+            }
+            device [
+              PositionSensor {
+                name "knee_sensor2"
+              }
+              RotationalMotor {
+                name "knee_motor2"
+                maxVelocity 8.7
+                minPosition -1.57
+                maxPosition 1.57
+                maxTorque 0.176
+              }
+            ]
+            endPoint Solid {
+              translation -1.734723475976807e-18 0 -0.03
+              rotation 0 1 0 0
+              children [
+                USE LOWER_LEG
+              ]
+              name "lower_leg2"
+              boundingObject USE LOWER_LEG
+              physics Physics {
+              }
+            }
+          }
+        ]
+        name "upper_leg2"
+        boundingObject USE UPPER_LEG
+        physics Physics {
+        }
+      }
+    }
     Solid {
-      translation 0 0 0.05
       children [
         DEF BODY Shape {
           appearance PBRAppearance {
@@ -113,5 +172,6 @@ Robot {
       }
     }
   ]
+  boundingObject USE BODY
   controller "MinikameAvance"
 }

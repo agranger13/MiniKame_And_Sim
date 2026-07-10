@@ -33,8 +33,8 @@ int main(int argc, char **argv) {
   //  Motor *motor = robot->getMotor("motorname");
   //  DistanceSensor *ds = robot->getDistanceSensor("dsname");
   //  ds->enable(timeStep);
-  Motor *motor_hip = robot->getMotor("hip_motor1");
-  Motor *motor_knee = robot->getMotor("knee_motor1");
+  Motor *motor_hip = robot->getMotor("hip_motor2");
+  Motor *motor_knee = robot->getMotor("knee_motor2");
 
   // Main loop:
   // - perform simulation steps until Webots is stopping the controller
