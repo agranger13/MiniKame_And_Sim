@@ -1,0 +1,117 @@
+#VRML_SIM R2025a utf8
+
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/backgrounds/protos/TexturedBackground.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/backgrounds/protos/TexturedBackgroundLight.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/floors/protos/RectangleArena.proto"
+
+WorldInfo {
+}
+Viewpoint {
+  orientation 0.134115867954145 0.113442598084638 -0.9844509692730834 1.752814844893078
+  position 0.052224626875500696 0.42292985779022035 0.13471994596989811
+}
+TexturedBackground {
+}
+TexturedBackgroundLight {
+}
+RectangleArena {
+}
+Robot {
+  children [
+    HingeJoint {
+      jointParameters HingeJointParameters {
+        anchor 0.025 0.02 0.04
+      }
+      device [
+        PositionSensor {
+          name "hip_sensor1"
+        }
+        RotationalMotor {
+          name "hip_motor1"
+          maxVelocity 8.7
+          minPosition -1.57
+          maxPosition 1.57
+          maxTorque 0.176
+        }
+      ]
+      endPoint Solid {
+        translation 0.025 0.02 0.04
+        rotation 1 0 0 0
+        children [
+          DEF UPPER_LEG Shape {
+            appearance PBRAppearance {
+              baseColor 0 0 0.498039
+              roughness 1
+              metalness 0
+            }
+            geometry Box {
+              size 0.01 0.01 0.03
+            }
+          }
+          HingeJoint {
+            jointParameters HingeJointParameters {
+              axis 0 1 0
+              anchor 0.01 0 -0.02
+            }
+            device [
+              PositionSensor {
+                name "knee_sensor1"
+              }
+              RotationalMotor {
+                name "knee_motor1"
+                maxVelocity 8.7
+                minPosition -1.57
+                maxPosition 1.57
+                maxTorque 0.176
+              }
+            ]
+            endPoint Solid {
+              translation 0.01 0 -0.02
+              rotation 0 1 0 0
+              children [
+                Shape {
+                  appearance PBRAppearance {
+                    baseColor 0.333333 0.666667 1
+                    roughness 1
+                    metalness 0
+                  }
+                  geometry Box {
+                    size 0.01 0.01 0.03
+                  }
+                }
+              ]
+              name "lower_leg1"
+              boundingObject USE UPPER_LEG
+              physics Physics {
+              }
+            }
+          }
+        ]
+        name "upper_leg1"
+        boundingObject USE UPPER_LEG
+        physics Physics {
+        }
+      }
+    }
+    Solid {
+      translation 0 0 0.05
+      children [
+        DEF BODY Shape {
+          appearance PBRAppearance {
+            baseColor 0.666667 0 0
+            roughness 1
+            metalness 0
+          }
+          geometry Box {
+            size 0.04 0.06 0.02
+          }
+        }
+      ]
+      name "body"
+      boundingObject USE BODY
+      physics Physics {
+      }
+    }
+  ]
+  controller "MinikameAvance"
+}
