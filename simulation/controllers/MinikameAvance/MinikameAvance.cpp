@@ -9,7 +9,9 @@
 // and/or to add some other includes
 #include <webots/Robot.hpp>
 #include <webots/Motor.hpp>
+#include <algorithm>
 #include <cmath>
+#include <string>
 
 // All the webots classes are defined in the "webots" namespace
 using namespace webots;
@@ -33,24 +35,37 @@ int main(int argc, char **argv) {
   //  Motor *motor = robot->getMotor("motorname");
   //  DistanceSensor *ds = robot->getDistanceSensor("dsname");
   //  ds->enable(timeStep);
-  Motor *motor_hip = robot->getMotor("hip_motor2");
-  Motor *motor_knee = robot->getMotor("knee_motor2");
+  // 4 pattes, 2 servos chacune (hip + knee), numérotées 1 à 4 :
+  // 1 = avant-droite, 2 = avant-gauche, 3 = arrière-droite, 4 = arrière-gauche
+  const int NUM_LEGS = 4;
+  Motor *hip[NUM_LEGS];
+  Motor *knee[NUM_LEGS];
+  for (int i = 0; i < NUM_LEGS; i++) {
+    std::string hip_name = "hip_motor" + std::to_string(i + 1);
+    std::string knee_name = "knee_motor" + std::to_string(i + 1);
+    hip[i] = robot->getMotor(hip_name.c_str());
+    knee[i] = robot->getMotor(knee_name.c_str());
+  }
+
+  // Trot diagonal : pattes 1+4 en phase, pattes 2+3 en opposition de phase
+  const double phase[NUM_LEGS] = {0.0, M_PI, M_PI, 0.0};
 
   // Main loop:
   // - perform simulation steps until Webots is stopping the controller
   while (robot->step(timeStep) != -1) {
-    // Read the sensors:
-    // Enter here functions to read sensor data, like:
-    //  double val = ds->getValue();
-
-    // Process sensor data here.
-
-    // Enter here functions to send actuator commands, like:
-    //  motor->setPosition(10.0);
     double t = robot->getTime();
-    double angle = 1.0 * sin(2 * M_PI * 0.5 * t);  // amplitude 1 rad, 0.5 Hz
-    motor_hip->setPosition(angle);
-    motor_knee->setPosition(angle);
+    const double freq = 0.5;       // Hz
+    const double hip_amp = 0.5;    // rad — balancement avant/arrière
+    const double knee_amp = 0.5;   // rad — levée de patte
+
+    for (int i = 0; i < NUM_LEGS; i++) {
+      double phi = 2 * M_PI * freq * t + phase[i];
+      double hip_angle = hip_amp * sin(phi);
+      // le genou lève la patte pendant la moitié "retour" du cycle
+      double knee_angle = knee_amp * std::max(0.0, sin(phi));
+      hip[i]->setPosition(hip_angle);
+      knee[i]->setPosition(knee_angle);
+    }
   };
 
   // Enter here exit cleanup code.

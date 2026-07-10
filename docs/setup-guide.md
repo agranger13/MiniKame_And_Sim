@@ -7,14 +7,14 @@ Checklist à suivre soi-même. Basé sur `.claude/CLAUDE.md` et l'état du repo 
 | Élément | État |
 |---|---|
 | `kame-core/hal.h` | ✅ présent (interface HAL définie) |
-| `kame-core/oscillator.h/.cpp` | ❌ à créer |
-| `kame-core/gaits.h/.cpp` | ❌ à créer |
-| `kame-core/kame.h/.cpp` | ❌ à créer |
+| `kame-core/oscillator.h/.cpp` | ❌ à créer (jalon 5) |
+| `kame-core/gaits.h/.cpp` | ❌ à créer (jalon 5) |
+| `kame-core/kame.h/.cpp` | ❌ à créer (jalon 5) |
 | `firmware/` (PlatformIO) | ✅ scaffoldé (`platformio.ini`, `src/main.cpp`) mais **template par défaut**, pas encore branché sur `kame-core` ni le HAL |
 | `firmware/platformio.ini` | ⚠️ ne contient pas encore `lib_extra_dirs = ../` |
-| `simulation/worlds/MiniKame.wbt` | ✅ un monde Webots existe déjà |
-| `simulation/controllers/` | ❌ vide — pas de contrôleur C++ ni de Makefile |
-| `simulation/protos/` | ❌ vide — pas de PROTO `MiniKame.proto` |
+| `simulation/worlds/MiniKame.wbt` | ✅ monde Webots avec **4 pattes** (hip+knee ×4, limites `maxVelocity`/`maxTorque` posées, `DEF`/`USE` pour les Shapes) |
+| `simulation/controllers/MinikameAvance/` | ✅ contrôleur C++ anime les **8 moteurs** (trot diagonal en dur : pattes 1+4 en phase, 2+3 en opposition), pas encore branché sur `kame-core` |
+| `simulation/protos/` | ❌ vide — pas de PROTO `MiniKame.proto` (prévu jalon 3 avancé / plus tard) |
 
 ---
 
@@ -105,15 +105,12 @@ CXX_SOURCES = kame_ctrl.cpp ../../../kame-core/oscillator.cpp ../../../kame-core
 
 ## 4. Ordre des jalons (roadmap, ne rien sauter)
 
-1. **Prise en main Webots** — tutos 1 à 4, en particulier `HingeJoint`/`RotationalMotor` (tuto 4).
-2. **Jalon minimal** — via Webots, `Wizards > New Project Directory`, créer un monde avec un cube + UNE patte à 2 servos qui oscille (moteur codé en dur dans le contrôleur généré, sans passer par `kame-core` pour l'instant — juste pour valider la mécanique HingeJoint/moteur).
-3. **Limites matérielles à poser dans Webots dès ce jalon** (sinon gaits infaisables sur le vrai robot) :
-   - `maxVelocity` ≈ 8–10 rad/s (SG90 : ~0,1s/60°)
-   - `maxTorque` ≈ 0,15–0,18 N·m (SG90 : ~1,8 kg·cm)
-   - masse totale du robot ~300–400 g répartie sur les pièces
-4. **Modèle complet** — dupliquer la patte ×4, en primitives (boîtes/cylindres) d'abord.
-5. **Porter le code dans `kame-core`** — créer `oscillator.h/.cpp`, `gaits.h/.cpp`, `kame.h/.cpp` au-dessus du HAL, en se basant sur `code/arduino/src/minikame.cpp` du repo original JavierIH.
-6. **Brancher les deux backends** — `simulation/controllers/kame_ctrl/kame_ctrl.cpp` (Webots Motor) et `firmware/src/main.cpp` (Servo.h ESP8266 + trims), tous deux au-dessus de `KameHAL`.
+1. ✅ **Prise en main Webots** — tutos 1 à 4, en particulier `HingeJoint`/`RotationalMotor` (tuto 4).
+2. ✅ **Jalon minimal** — cube + UNE patte à 2 servos qui oscille (moteur codé en dur dans le contrôleur, sans passer par `kame-core`) — mécanique HingeJoint/moteur validée.
+3. ✅ **Limites matérielles posées dans Webots** (`maxVelocity`, `maxTorque`, masse) + **passage à 2 pattes** dans `MiniKame.wbt` / `MinikameAvance.cpp`.
+4. ✅ **Modèle complet** — 4 pattes dupliquées via `DEF`/`USE` dans `MiniKame.wbt`, contrôleur `MinikameAvance.cpp` animant les 8 moteurs (trot diagonal en dur, sans `kame-core`).
+5. 🔄 **En cours — Porter le code dans `kame-core`** — créer `oscillator.h/.cpp`, `gaits.h/.cpp`, `kame.h/.cpp` au-dessus du HAL, en se basant sur `code/arduino/src/minikame.cpp` du repo original JavierIH.
+6. **Brancher les deux backends** — le contrôleur Webots (`simulation/controllers/MinikameAvance/MinikameAvance.cpp`, actuellement en dur) et `firmware/src/main.cpp` (Servo.h ESP8266 + trims), tous deux au-dessus de `KameHAL`.
 7. **Validation croisée** — flasher le NodeMCU, calibrer les trims, filmer sim et réel côte à côte, ajuster `contactProperties` (friction) dans Webots.
 8. **(Plus tard) RL** — URDF → PyBullet + Gymnasium + Stable-Baselines3 (PPO), communication UDP ~50 Hz PC → ESP8266.
 
@@ -129,8 +126,10 @@ CXX_SOURCES = kame_ctrl.cpp ../../../kame-core/oscillator.cpp ../../../kame-core
 
 ## Résumé — prochaines actions dans l'ordre
 
-1. [ ] Installer Webots + faire les tutos 1-4
-2. [ ] Vérifier PlatformIO (extension + `pio run` sur `firmware/` tel quel)
-3. [ ] Vérifier/installer le driver CH340, noter le port COM
-4. [ ] Dans Webots, créer le jalon 2 (cube + 1 patte 2 servos qui oscille) via le Wizard
-5. [ ] Une fois la patte validée en simu → attaquer `kame-core` (oscillateurs/gaits) et le branchement des deux backends
+1. [x] Installer Webots + faire les tutos 1-4
+2. [x] Vérifier PlatformIO (extension + `pio run` sur `firmware/` tel quel)
+3. [ ] Vérifier/installer le driver CH340, noter le port COM (à faire avant le premier flash réel)
+4. [x] Jalon 2 (cube + 1 patte 2 servos qui oscille) validé
+5. [x] Jalon 3 (limites matérielles + passage à 2 pattes) validé
+6. [x] Jalon 4 : 4 pattes dupliquées dans `MiniKame.wbt`, contrôleur animant les 8 moteurs (trot diagonal)
+7. [ ] **En cours** — Jalon 5 : attaquer `kame-core` (oscillateurs/gaits) et brancher les deux backends sur le HAL (jalon 6)

@@ -153,6 +153,122 @@ Robot {
         }
       }
     }
+    HingeJoint {
+      jointParameters HingeJointParameters {
+        axis 0 0 1
+        anchor 0.02 -0.02 0.05
+      }
+      device [
+        PositionSensor {
+          name "hip_sensor3"
+        }
+        RotationalMotor {
+          name "hip_motor3"
+          maxVelocity 8.7
+          minPosition -1.57
+          maxPosition 1.57
+          maxTorque 0.176
+        }
+      ]
+      endPoint Solid {
+        translation 0.03499999999999989 -0.020000000000000122 -1.3877787807814457e-17
+        rotation -1.5700932591295433e-16 -0.9999999999999999 -1.5210278447817451e-16 1.5707953071795846
+        children [
+          USE UPPER_LEG
+          HingeJoint {
+            jointParameters HingeJointParameters {
+              axis 0 1 0
+              anchor 0 0 -0.01
+            }
+            device [
+              PositionSensor {
+                name "knee_sensor3"
+              }
+              RotationalMotor {
+                name "knee_motor3"
+                maxVelocity 8.7
+                minPosition -1.57
+                maxPosition 1.57
+                maxTorque 0.176
+              }
+            ]
+            endPoint Solid {
+              translation 1.962405932198763e-16 -2.775557561562893e-17 -0.029999999999999978
+              rotation 0 1 0 0
+              children [
+                USE LOWER_LEG
+              ]
+              name "lower_leg3"
+              boundingObject USE LOWER_LEG
+              physics Physics {
+              }
+            }
+          }
+        ]
+        name "upper_leg3"
+        boundingObject USE UPPER_LEG
+        physics Physics {
+        }
+      }
+    }
+    HingeJoint {
+      jointParameters HingeJointParameters {
+        axis 0 0 1
+        anchor -0.02 -0.02 0.05
+      }
+      device [
+        PositionSensor {
+          name "hip_sensor4"
+        }
+        RotationalMotor {
+          name "hip_motor4"
+          maxVelocity 8.7
+          minPosition -1.57
+          maxPosition 1.57
+          maxTorque 0.176
+        }
+      ]
+      endPoint Solid {
+        translation -0.034999999999999996 -0.02 2.7755575615628914e-17
+        rotation 1.5700895750559034e-16 1 -7.850447875279517e-17 1.5707999999999998
+        children [
+          USE UPPER_LEG
+          HingeJoint {
+            jointParameters HingeJointParameters {
+              axis 0 1 0
+              anchor 0 0 -0.01
+            }
+            device [
+              PositionSensor {
+                name "knee_sensor4"
+              }
+              RotationalMotor {
+                name "knee_motor4"
+                maxVelocity 8.7
+                minPosition -1.57
+                maxPosition 1.57
+                maxTorque 0.176
+              }
+            ]
+            endPoint Solid {
+              translation -1.734723475976807e-18 0 -0.03
+              rotation 0 1 0 0
+              children [
+                USE LOWER_LEG
+              ]
+              name "lower_leg4"
+              boundingObject USE LOWER_LEG
+              physics Physics {
+              }
+            }
+          }
+        ]
+        name "upper_leg4"
+        boundingObject USE UPPER_LEG
+        physics Physics {
+        }
+      }
+    }
     Solid {
       children [
         DEF BODY Shape {
