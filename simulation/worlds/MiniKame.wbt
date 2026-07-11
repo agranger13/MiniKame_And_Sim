@@ -7,8 +7,8 @@ EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/project
 WorldInfo {
 }
 Viewpoint {
-  orientation 0.2720783118103268 0.2570969031267978 -0.9272942222644615 1.7025123846798607
-  position 0.02293441976408503 0.3573438725305786 0.2734620362840154
+  orientation 0.34428284621061234 0.40160454171110366 -0.8486360314540822 1.580898957322335
+  position -0.03798271558707501 0.3358132326256946 0.3304021726812718
 }
 TexturedBackground {
 }
@@ -22,7 +22,7 @@ Robot {
     HingeJoint {
       jointParameters HingeJointParameters {
         axis 0 0 1
-        anchor 0.02 0.02 0.05
+        anchor 0.02 0.03 0.05
       }
       device [
         PositionSensor {
@@ -37,8 +37,8 @@ Robot {
         }
       ]
       endPoint Solid {
-        translation 0.03499999999999989 0.020000000000000122 -1.3877787807814457e-17
-        rotation -1.5700932591295433e-16 -0.9999999999999999 -1.5210278447817451e-16 1.5707953071795846
+        translation 0.03507353030167621 0.03006212441277429 -7.077283067905699e-05
+        rotation 7.231798407185647e-05 -0.9999999947220047 -7.298013130478663e-05 1.5683827229209857
         children [
           DEF UPPER_LEG Shape {
             appearance PBRAppearance {
@@ -68,7 +68,7 @@ Robot {
               }
             ]
             endPoint Solid {
-              translation 1.962405932198763e-16 -2.775557561562893e-17 -0.029999999999999978
+              translation 2.1120258320017626e-16 -2.775557561562889e-17 -0.02999999999999991
               rotation 0 1 0 0
               children [
                 DEF LOWER_LEG Shape {
@@ -98,7 +98,7 @@ Robot {
     HingeJoint {
       jointParameters HingeJointParameters {
         axis 0 0 1
-        anchor -0.02 0.02 0.05
+        anchor -0.02 0.03 0.05
       }
       device [
         PositionSensor {
@@ -113,8 +113,8 @@ Robot {
         }
       ]
       endPoint Solid {
-        translation -0.034999999999999996 0.02 2.7755575615628914e-17
-        rotation 1.5700895750559034e-16 1 -7.850447875279517e-17 1.5707999999999998
+        translation -0.035072445277316885 0.030062629584157282 -6.810294344124918e-05
+        rotation 8.511538900266333e-05 0.999999992697066 8.579765966084978e-05 1.5683788660557536
         children [
           USE UPPER_LEG
           HingeJoint {
@@ -135,7 +135,7 @@ Robot {
               }
             ]
             endPoint Solid {
-              translation -1.734723475976807e-18 0 -0.03
+              translation -1.691355389077387e-17 0 -0.02999999999999982
               rotation 0 1 0 0
               children [
                 USE LOWER_LEG
@@ -156,7 +156,7 @@ Robot {
     HingeJoint {
       jointParameters HingeJointParameters {
         axis 0 0 1
-        anchor 0.02 -0.02 0.05
+        anchor 0.02 -0.03 0.05
       }
       device [
         PositionSensor {
@@ -171,8 +171,8 @@ Robot {
         }
       ]
       endPoint Solid {
-        translation 0.03499999999999989 -0.020000000000000122 -1.3877787807814457e-17
-        rotation -1.5700932591295433e-16 -0.9999999999999999 -1.5210278447817451e-16 1.5707953071795846
+        translation 0.03507601227590836 -0.030045924880963405 6.724323136537286e-05
+        rotation 8.556186474866928e-05 -0.9999999927371392 -8.48816154785186e-05 1.5732164966870859
         children [
           USE UPPER_LEG
           HingeJoint {
@@ -193,7 +193,7 @@ Robot {
               }
             ]
             endPoint Solid {
-              translation 1.962405932198763e-16 -2.775557561562893e-17 -0.029999999999999978
+              translation 1.8301332671555315e-16 -2.775557561562894e-17 -0.029999999999999888
               rotation 0 1 0 0
               children [
                 USE LOWER_LEG
@@ -214,7 +214,7 @@ Robot {
     HingeJoint {
       jointParameters HingeJointParameters {
         axis 0 0 1
-        anchor -0.02 -0.02 0.05
+        anchor -0.02 -0.03 0.05
       }
       device [
         PositionSensor {
@@ -229,8 +229,8 @@ Robot {
         }
       ]
       endPoint Solid {
-        translation -0.034999999999999996 -0.02 2.7755575615628914e-17
-        rotation 1.5700895750559034e-16 1 -7.850447875279517e-17 1.5707999999999998
+        translation -0.03470541309553862 -0.03337171497722227 6.59941773695355e-05
+        rotation -0.00023543290239953974 0.999999944525366 -0.00023562812571909915 1.5757803129157524
         children [
           USE UPPER_LEG
           HingeJoint {
@@ -251,7 +251,7 @@ Robot {
               }
             ]
             endPoint Solid {
-              translation -1.734723475976807e-18 0 -0.03
+              translation 9.107298248878237e-18 0 -0.029999999999999874
               rotation 0 1 0 0
               children [
                 USE LOWER_LEG
@@ -289,5 +289,7 @@ Robot {
     }
   ]
   boundingObject USE BODY
+  physics Physics {
+  }
   controller "MinikameAvance"
 }

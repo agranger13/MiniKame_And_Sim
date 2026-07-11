@@ -65,6 +65,9 @@
 ###
 ###-----------------------------------------------------------------------------
 
+INCLUDE = -I../../../kame-core
+CXX_SOURCES = MinikameAvance.cpp WebotsHAL.cpp ../../../kame-core/Oscillator/Oscillator.cpp
+
 ### Do not modify: this includes Webots global Makefile.include
 null :=
 space := $(null) $(null)
