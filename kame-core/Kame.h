@@ -12,7 +12,7 @@ struct GaitParams {
     int hipNeutralDeg;      // convention HAL : 90 = neutre
     int kneeNeutralDeg;     // angle genou "posé au sol" (position debout calibrée)
     int kneeLiftDeg;        // écart par rapport au neutre pour lever le pied pendant le swing
-    int kneeMirror[4];      // +1/-1 : sens de pliure du genou selon montage droite/gauche
+    int legMirror[4];       // +1/-1 : pattes 1,3 montées en miroir géométrique de 2,4 (hanche ET genou)
 };
 
 // Logique robot : n'appelle QUE le HAL, jamais Arduino.h ni webots directement.

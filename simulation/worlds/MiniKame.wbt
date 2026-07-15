@@ -8,7 +8,7 @@ WorldInfo {
 }
 Viewpoint {
   orientation 0.34428284621061234 0.40160454171110366 -0.8486360314540822 1.580898957322335
-  position -0.03798271558707501 0.3358132326256946 0.3304021726812718
+  position -0.16285658969942018 1.1433510873200448 1.1240159454868628
 }
 TexturedBackground {
 }
@@ -37,8 +37,8 @@ Robot {
         }
       ]
       endPoint Solid {
-        translation 0.03507353030167621 0.03006212441277429 -7.077283067905699e-05
-        rotation 7.231798407185647e-05 -0.9999999947220047 -7.298013130478663e-05 1.5683827229209857
+        translation 0.035 0.030 0.000
+        rotation 0.000 -1.000 0.000 1.568
         children [
           DEF UPPER_LEG Shape {
             appearance PBRAppearance {
@@ -68,7 +68,7 @@ Robot {
               }
             ]
             endPoint Solid {
-              translation 2.1120258320017626e-16 -2.775557561562889e-17 -0.02999999999999991
+              translation 0.000 0.000 -0.030
               rotation 0 1 0 0
               children [
                 DEF LOWER_LEG Shape {
@@ -113,8 +113,8 @@ Robot {
         }
       ]
       endPoint Solid {
-        translation -0.035072445277316885 0.030062629584157282 -6.810294344124918e-05
-        rotation 8.511538900266333e-05 0.999999992697066 8.579765966084978e-05 1.5683788660557536
+        translation -0.035 0.030 0.000
+        rotation 0.000 1.000 0.000 1.568
         children [
           USE UPPER_LEG
           HingeJoint {
@@ -135,7 +135,7 @@ Robot {
               }
             ]
             endPoint Solid {
-              translation -1.691355389077387e-17 0 -0.02999999999999982
+              translation 0.000 0.000 -0.030
               rotation 0 1 0 0
               children [
                 USE LOWER_LEG
@@ -171,8 +171,8 @@ Robot {
         }
       ]
       endPoint Solid {
-        translation 0.03507601227590836 -0.030045924880963405 6.724323136537286e-05
-        rotation 8.556186474866928e-05 -0.9999999927371392 -8.48816154785186e-05 1.5732164966870859
+        translation 0.035 -0.030 0.000
+        rotation 0.000 -1.000 0.000 1.573
         children [
           USE UPPER_LEG
           HingeJoint {
@@ -193,7 +193,7 @@ Robot {
               }
             ]
             endPoint Solid {
-              translation 1.8301332671555315e-16 -2.775557561562894e-17 -0.029999999999999888
+              translation 0.000 0.000 -0.030
               rotation 0 1 0 0
               children [
                 USE LOWER_LEG
@@ -229,8 +229,8 @@ Robot {
         }
       ]
       endPoint Solid {
-        translation -0.03470541309553862 -0.03337171497722227 6.59941773695355e-05
-        rotation -0.00023543290239953974 0.999999944525366 -0.00023562812571909915 1.5757803129157524
+        translation -0.035 -0.030 0.000
+        rotation 0.000 1.000 0.000 1.573
         children [
           USE UPPER_LEG
           HingeJoint {
@@ -251,7 +251,7 @@ Robot {
               }
             ]
             endPoint Solid {
-              translation 9.107298248878237e-18 0 -0.029999999999999874
+              translation 0.000 0.000 -0.030
               rotation 0 1 0 0
               children [
                 USE LOWER_LEG
@@ -292,4 +292,5 @@ Robot {
   physics Physics {
   }
   controller "MinikameAvance"
+  supervisor TRUE
 }

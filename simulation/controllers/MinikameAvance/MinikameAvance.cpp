@@ -8,15 +8,94 @@
 // <webots/DistanceSensor.hpp>, <webots/Motor.hpp>, etc.
 // and/or to add some other includes
 #include <webots/Robot.hpp>
+#include <webots/Supervisor.hpp>
 #include <webots/Motor.hpp>
+#include <webots/Node.hpp>
 #include "WebotsHAL.h"
 #include "Kame.h"
 #include "Gaits.h"
 #include <string>
 #include <cstdio>
+#include <cmath>
+#include <fstream>
+#include <sstream>
 
 // All the webots classes are defined in the "webots" namespace
 using namespace webots;
+
+// Pont minimal vers le serveur MCP (webots-youbot-mcp/) : le contrôleur est
+// un Supervisor pour pouvoir exporter des captures d'écran et piloter la
+// simulation depuis Claude Code. Format JSON fixe, écrit uniquement par ce
+// serveur MCP -> extraction de valeurs par recherche de sous-chaîne au lieu
+// d'une dépendance JSON complète.
+namespace {
+const char* kCommandsPath = "../../../webots-youbot-mcp/data/commands.json";
+const char* kScreenshotDir = "../../../webots-youbot-mcp/data/screenshots/";
+const char* kStatusPath = "../../../webots-youbot-mcp/data/status.json";
+
+std::string readFile(const std::string& path) {
+    std::ifstream f(path);
+    if (!f) return "";
+    std::ostringstream ss;
+    ss << f.rdbuf();
+    return ss.str();
+}
+
+void writeFile(const std::string& path, const std::string& content) {
+    std::ofstream f(path, std::ios::trunc);
+    f << content;
+}
+
+std::string jsonStringValue(const std::string& json, const std::string& key) {
+    size_t pos = json.find("\"" + key + "\"");
+    if (pos == std::string::npos) return "";
+    size_t firstQuote = json.find('"', json.find(':', pos) + 1);
+    if (firstQuote == std::string::npos) return "";
+    size_t secondQuote = json.find('"', firstQuote + 1);
+    if (secondQuote == std::string::npos) return "";
+    return json.substr(firstQuote + 1, secondQuote - firstQuote - 1);
+}
+
+// Publie la pose réelle (position + cap) du robot, lue directement via
+// l'API Supervisor -> permet de mesurer une dérive de trajectoire avec des
+// chiffres plutôt qu'en comparant des captures d'écran à l'oeil.
+void publishStatus(Node* selfNode, double simTime) {
+    const double kPi = 3.14159265358979323846;
+    const double* pos = selfNode->getPosition();
+    const double* rot = selfNode->getOrientation();  // 3x3 row-major
+    double yawDeg = atan2(rot[3], rot[0]) * 180.0 / kPi;
+    std::ostringstream json;
+    json << "{\"pos\": [" << pos[0] << ", " << pos[1] << ", " << pos[2] << "], "
+         << "\"yaw_deg\": " << yawDeg << ", "
+         << "\"sim_time\": " << simTime << "}";
+    writeFile(kStatusPath, json.str());
+}
+
+void handleMcpCommands(Supervisor* robot, std::string& lastTimestamp) {
+    std::string cmdJson = readFile(kCommandsPath);
+    if (cmdJson.empty()) return;
+
+    std::string ts = jsonStringValue(cmdJson, "timestamp");
+    if (ts.empty() || ts == lastTimestamp || ts == "0") return;
+    lastTimestamp = ts;
+
+    // Effacer avant traitement : un "reload" relance le contrôleur, qui
+    // relirait sinon indéfiniment la même commande.
+    writeFile(kCommandsPath, "{\"action\": \"none\", \"command\": \"cleared\", \"timestamp\": \"0\"}");
+
+    std::string action = jsonStringValue(cmdJson, "action");
+    if (action == "screenshot") {
+        std::string filename = jsonStringValue(cmdJson, "filename");
+        robot->exportImage(std::string(kScreenshotDir) + filename + ".png", 100);
+    } else if (action == "simulation") {
+        std::string command = jsonStringValue(cmdJson, "command");
+        if (command == "pause") robot->simulationSetMode(Supervisor::SIMULATION_MODE_PAUSE);
+        else if (command == "resume") robot->simulationSetMode(Supervisor::SIMULATION_MODE_REAL_TIME);
+        else if (command == "reset") robot->simulationReset();
+        else if (command == "reload") robot->worldReload();
+    }
+}
+}  // namespace
 
 // This is the main program of your controller.
 // It creates an instance of your Robot instance, launches its
@@ -26,8 +105,9 @@ using namespace webots;
 // The arguments of the main function can be specified by the
 // "controllerArgs" field of the Robot node
 int main(int argc, char **argv) {
-  // create the Robot instance.
-  Robot *robot = new Robot();
+  // create the Robot instance (Supervisor : requis pour exportImage() et le
+  // pilotage de simulation depuis le pont MCP).
+  Supervisor *robot = new Supervisor();
 
   // get the time step of the current world.
   int timeStep = (int)robot->getBasicTimeStep();
@@ -65,9 +145,17 @@ int main(int argc, char **argv) {
   // true pour retester une nouvelle plage si besoin.
   const bool calibrationMode = false;
 
+  std::string lastMcpTimestamp;
+  Node* selfNode = robot->getSelf();
+  int stepCounter = 0;
+
   // Main loop:
   // - perform simulation steps until Webots is stopping the controller
   while (robot->step(timeStep) != -1) {
+    handleMcpCommands(robot, lastMcpTimestamp);
+    if (++stepCounter % 15 == 0) {
+      publishStatus(selfNode, robot->getTime());
+    }
     if (calibrationMode) {
       // Paliers fixes plutôt qu'un balayage continu : le genou tient chaque
       // angle 2s, valeur affichée dans la console Webots, pour repérer
@@ -86,7 +174,7 @@ int main(int argc, char **argv) {
       }
       for (int i = 0; i < NUM_LEGS; i++) {
         hal.setServo(i, gait.hipNeutralDeg);   // hanches figées
-        double kneeAngle = gait.hipNeutralDeg + gait.kneeMirror[i] * kneeDeviation;
+        double kneeAngle = gait.hipNeutralDeg + gait.legMirror[i] * kneeDeviation;
         hal.setServo(NUM_LEGS + i, kneeAngle); // genoux par paliers
       }
     } else {
