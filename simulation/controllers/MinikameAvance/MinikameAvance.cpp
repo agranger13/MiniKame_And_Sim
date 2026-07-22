@@ -10,6 +10,7 @@
 #include <webots/Robot.hpp>
 #include <webots/Supervisor.hpp>
 #include <webots/Motor.hpp>
+#include <webots/Keyboard.hpp>
 #include <webots/Node.hpp>
 #include "WebotsHAL.h"
 #include "Kame.h"
@@ -112,19 +113,14 @@ int main(int argc, char **argv) {
   // get the time step of the current world.
   int timeStep = (int)robot->getBasicTimeStep();
 
-  // You should insert a getDevice-like function in order to get the
-  // instance of a device of the robot. Something like:
-  //  Motor *motor = robot->getMotor("motorname");
-  //  DistanceSensor *ds = robot->getDistanceSensor("dsname");
-  //  ds->enable(timeStep);
-  // 4 pattes, 2 servos chacune (hip + knee), numérotées 1 à 4 :
-  // 1 = avant-droite, 2 = avant-gauche, 3 = arrière-droite, 4 = arrière-gauche
+  // 4 pattes, 2 servos chacune (hip + knee). Ordre : 0=FL, 1=FR, 2=RL, 3=RR.
   const int NUM_LEGS = Kame::NUM_LEGS;
+  const char* legSuffix[NUM_LEGS] = {"fl", "fr", "rl", "rr"};
   Motor *hip[NUM_LEGS];
   Motor *knee[NUM_LEGS];
   for (int i = 0; i < NUM_LEGS; i++) {
-    std::string hip_name = "hip_motor" + std::to_string(i + 1);
-    std::string knee_name = "knee_motor" + std::to_string(i + 1);
+    std::string hip_name = std::string("hip_") + legSuffix[i];
+    std::string knee_name = std::string("knee_") + legSuffix[i];
     hip[i] = robot->getMotor(hip_name.c_str());
     knee[i] = robot->getMotor(knee_name.c_str());
   }
@@ -137,13 +133,13 @@ int main(int argc, char **argv) {
   }
   WebotsHAL hal(robot, motors, NUM_MOTORS, timeStep);
 
-  GaitParams gait = waveGait();
   Kame kame(hal);
-  kame.setGait(gait);
+  kame.setGait(trotGait());
 
-  // Calibration terminée (angle debout validé entre 40 et 50°) — repasser à
-  // true pour retester une nouvelle plage si besoin.
-  const bool calibrationMode = false;
+  Keyboard keyboard;
+  keyboard.enable(timeStep);
+  float speed = 1.0f;
+  float turn = 0.0f;
 
   std::string lastMcpTimestamp;
   Node* selfNode = robot->getSelf();
@@ -156,30 +152,19 @@ int main(int argc, char **argv) {
     if (++stepCounter % 15 == 0) {
       publishStatus(selfNode, robot->getTime());
     }
-    if (calibrationMode) {
-      // Paliers fixes plutôt qu'un balayage continu : le genou tient chaque
-      // angle 2s, valeur affichée dans la console Webots, pour repérer
-      // précisément l'angle qui tient debout (le balayage continu passait
-      // devant trop vite pour l'observer).
-      const double stepDeg = 10.0;
-      const double holdSec = 2.0;
-      const int numSteps = (int)(gait.hipNeutralDeg / stepDeg) + 1; // 90,80,...,0
-      double t = robot->getTime();
-      int stepIndex = ((int)(t / holdSec)) % numSteps;
-      static int lastStepIndex = -1;
-      double kneeDeviation = -stepIndex * stepDeg;
-      if (stepIndex != lastStepIndex) {
-        printf("Calibration : genou cible = %.0f deg\n", gait.hipNeutralDeg + kneeDeviation);
-        lastStepIndex = stepIndex;
-      }
-      for (int i = 0; i < NUM_LEGS; i++) {
-        hal.setServo(i, gait.hipNeutralDeg);   // hanches figées
-        double kneeAngle = gait.hipNeutralDeg + gait.legMirror[i] * kneeDeviation;
-        hal.setServo(NUM_LEGS + i, kneeAngle); // genoux par paliers
-      }
-    } else {
-      kame.update();
+
+    // Clavier (cliquer d'abord dans la vue 3D) : haut/bas = avancer/reculer,
+    // gauche/droite = tourner, espace = stop.
+    for (int key = keyboard.getKey(); key != -1; key = keyboard.getKey()) {
+      if (key == Keyboard::UP) speed = fminf(1.0f, speed + 0.25f);
+      else if (key == Keyboard::DOWN) speed = fmaxf(-1.0f, speed - 0.25f);
+      else if (key == Keyboard::LEFT) turn = fmaxf(-1.0f, turn - 0.25f);
+      else if (key == Keyboard::RIGHT) turn = fminf(1.0f, turn + 0.25f);
+      else if (key == ' ') { speed = 0.0f; turn = 0.0f; }
     }
+
+    kame.setControl(speed, turn);
+    kame.update();
   };
 
   // Enter here exit cleanup code.

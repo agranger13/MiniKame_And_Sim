@@ -1,295 +1,471 @@
 #VRML_SIM R2025a utf8
 
-EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/backgrounds/protos/TexturedBackground.proto"
-EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/backgrounds/protos/TexturedBackgroundLight.proto"
-EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/objects/floors/protos/RectangleArena.proto"
-
 WorldInfo {
+  info [
+    "Quadrupede MiniKame (Javier Isabel) - 8 servos, 2 DOF par patte"
+    "Monde autonome : aucun PROTO externe, aucun telechargement requis."
+  ]
+  title "MiniKame"
+  basicTimeStep 8
+  contactProperties [
+    ContactProperties {
+      material1 "default"
+      material2 "default"
+      coulombFriction [
+        1.2
+      ]
+      bounce 0
+      bounceVelocity 0.01
+      softCFM 0.0001
+    }
+  ]
 }
 Viewpoint {
-  orientation 0.34428284621061234 0.40160454171110366 -0.8486360314540822 1.580898957322335
-  position -0.16285658969942018 1.1433510873200448 1.1240159454868628
+  orientation -0.09892482491849053 0.10071787719093367 0.9899847414122088 1.5709449245776774
+  position -0.11893665140504069 -2.9479681363767654 0.8417332819662685
 }
-TexturedBackground {
+Background {
+  skyColor [
+    0.45 0.6 0.8
+  ]
 }
-TexturedBackgroundLight {
+DirectionalLight {
+  direction 0.4 0.5 -1
+  intensity 2.5
+  castShadows TRUE
 }
-RectangleArena {
+DirectionalLight {
+  direction -0.5 -0.3 -0.6
+  intensity 1.2
 }
-Robot {
-  translation 0 0 0.05
+PointLight {
+  intensity 3
+  location 0 0 1.2
+}
+Solid {
   children [
-    HingeJoint {
-      jointParameters HingeJointParameters {
-        axis 0 0 1
-        anchor 0.02 0.03 0.05
+    Shape {
+      appearance PBRAppearance {
+        baseColor 0.75 0.75 0.72
+        roughness 1
+        metalness 0
       }
-      device [
-        PositionSensor {
-          name "hip_sensor1"
-        }
-        RotationalMotor {
-          name "hip_motor1"
-          maxVelocity 8.7
-          minPosition -1.57
-          maxPosition 1.57
-          maxTorque 0.176
-        }
-      ]
-      endPoint Solid {
-        translation 0.035 0.030 0.000
-        rotation 0.000 -1.000 0.000 1.568
-        children [
-          DEF UPPER_LEG Shape {
-            appearance PBRAppearance {
-              baseColor 0 0 0.498039
-              roughness 1
-              metalness 0
-            }
-            geometry Box {
-              size 0.01 0.01 0.03
-            }
-          }
-          HingeJoint {
-            jointParameters HingeJointParameters {
-              axis 0 1 0
-              anchor 0 0 -0.01
-            }
-            device [
-              PositionSensor {
-                name "knee_sensor1"
-              }
-              RotationalMotor {
-                name "knee_motor1"
-                maxVelocity 8.7
-                minPosition -1.57
-                maxPosition 1.57
-                maxTorque 0.176
-              }
-            ]
-            endPoint Solid {
-              translation 0.000 0.000 -0.030
-              rotation 0 1 0 0
-              children [
-                DEF LOWER_LEG Shape {
-                  appearance PBRAppearance {
-                    baseColor 0.333333 0.666667 1
-                    roughness 1
-                    metalness 0
-                  }
-                  geometry Box {
-                    size 0.01 0.01 0.03
-                  }
-                }
-              ]
-              name "lower_leg1"
-              boundingObject USE LOWER_LEG
-              physics Physics {
-              }
-            }
-          }
-        ]
-        name "upper_leg1"
-        boundingObject USE UPPER_LEG
-        physics Physics {
-        }
-      }
-    }
-    HingeJoint {
-      jointParameters HingeJointParameters {
-        axis 0 0 1
-        anchor -0.02 0.03 0.05
-      }
-      device [
-        PositionSensor {
-          name "hip_sensor2"
-        }
-        RotationalMotor {
-          name "hip_motor2"
-          maxVelocity 8.7
-          minPosition -1.57
-          maxPosition 1.57
-          maxTorque 0.176
-        }
-      ]
-      endPoint Solid {
-        translation -0.035 0.030 0.000
-        rotation 0.000 1.000 0.000 1.568
-        children [
-          USE UPPER_LEG
-          HingeJoint {
-            jointParameters HingeJointParameters {
-              axis 0 1 0
-              anchor 0 0 -0.01
-            }
-            device [
-              PositionSensor {
-                name "knee_sensor2"
-              }
-              RotationalMotor {
-                name "knee_motor2"
-                maxVelocity 8.7
-                minPosition -1.57
-                maxPosition 1.57
-                maxTorque 0.176
-              }
-            ]
-            endPoint Solid {
-              translation 0.000 0.000 -0.030
-              rotation 0 1 0 0
-              children [
-                USE LOWER_LEG
-              ]
-              name "lower_leg2"
-              boundingObject USE LOWER_LEG
-              physics Physics {
-              }
-            }
-          }
-        ]
-        name "upper_leg2"
-        boundingObject USE UPPER_LEG
-        physics Physics {
-        }
-      }
-    }
-    HingeJoint {
-      jointParameters HingeJointParameters {
-        axis 0 0 1
-        anchor 0.02 -0.03 0.05
-      }
-      device [
-        PositionSensor {
-          name "hip_sensor3"
-        }
-        RotationalMotor {
-          name "hip_motor3"
-          maxVelocity 8.7
-          minPosition -1.57
-          maxPosition 1.57
-          maxTorque 0.176
-        }
-      ]
-      endPoint Solid {
-        translation 0.035 -0.030 0.000
-        rotation 0.000 -1.000 0.000 1.573
-        children [
-          USE UPPER_LEG
-          HingeJoint {
-            jointParameters HingeJointParameters {
-              axis 0 1 0
-              anchor 0 0 -0.01
-            }
-            device [
-              PositionSensor {
-                name "knee_sensor3"
-              }
-              RotationalMotor {
-                name "knee_motor3"
-                maxVelocity 8.7
-                minPosition -1.57
-                maxPosition 1.57
-                maxTorque 0.176
-              }
-            ]
-            endPoint Solid {
-              translation 0.000 0.000 -0.030
-              rotation 0 1 0 0
-              children [
-                USE LOWER_LEG
-              ]
-              name "lower_leg3"
-              boundingObject USE LOWER_LEG
-              physics Physics {
-              }
-            }
-          }
-        ]
-        name "upper_leg3"
-        boundingObject USE UPPER_LEG
-        physics Physics {
-        }
-      }
-    }
-    HingeJoint {
-      jointParameters HingeJointParameters {
-        axis 0 0 1
-        anchor -0.02 -0.03 0.05
-      }
-      device [
-        PositionSensor {
-          name "hip_sensor4"
-        }
-        RotationalMotor {
-          name "hip_motor4"
-          maxVelocity 8.7
-          minPosition -1.57
-          maxPosition 1.57
-          maxTorque 0.176
-        }
-      ]
-      endPoint Solid {
-        translation -0.035 -0.030 0.000
-        rotation 0.000 1.000 0.000 1.573
-        children [
-          USE UPPER_LEG
-          HingeJoint {
-            jointParameters HingeJointParameters {
-              axis 0 1 0
-              anchor 0 0 -0.01
-            }
-            device [
-              PositionSensor {
-                name "knee_sensor4"
-              }
-              RotationalMotor {
-                name "knee_motor4"
-                maxVelocity 8.7
-                minPosition -1.57
-                maxPosition 1.57
-                maxTorque 0.176
-              }
-            ]
-            endPoint Solid {
-              translation 0.000 0.000 -0.030
-              rotation 0 1 0 0
-              children [
-                USE LOWER_LEG
-              ]
-              name "lower_leg4"
-              boundingObject USE LOWER_LEG
-              physics Physics {
-              }
-            }
-          }
-        ]
-        name "upper_leg4"
-        boundingObject USE UPPER_LEG
-        physics Physics {
-        }
-      }
-    }
-    Solid {
-      children [
-        DEF BODY Shape {
-          appearance PBRAppearance {
-            baseColor 0.666667 0 0
-            roughness 1
-            metalness 0
-          }
-          geometry Box {
-            size 0.04 0.06 0.02
-          }
-        }
-      ]
-      name "body"
-      boundingObject USE BODY
-      physics Physics {
+      geometry Plane {
+        size 2 2
       }
     }
   ]
-  boundingObject USE BODY
+  name "floor"
+  boundingObject Plane {
+    size 2 2
+  }
+}
+Robot {
+  translation 0 0 0.075
+  children [
+    DEF BODY_SHAPE Shape {
+      appearance PBRAppearance {
+        baseColor 0.9 0.55 0.1
+        roughness 0.6
+        metalness 0
+      }
+      geometry Box {
+        size 0.14 0.09 0.03
+      }
+    }
+    DEF HEAD Pose {
+      translation 0.075 0 0.005
+      children [
+        Shape {
+          appearance PBRAppearance {
+            baseColor 0.2 0.2 0.2
+            roughness 0.8
+            metalness 0
+          }
+          geometry Box {
+            size 0.02 0.05 0.02
+          }
+        }
+      ]
+    }
+    DEF LEG_FL HingeJoint {
+      jointParameters HingeJointParameters {
+        axis 0 0 1
+        anchor 0.05 0.045 0
+      }
+      device [
+        RotationalMotor {
+          name "hip_fl"
+          maxVelocity 8.7
+          minPosition -1.57
+          maxPosition 1.57
+          maxTorque 0.176
+        }
+      ]
+      endPoint Solid {
+        translation 0.05 0.045 0
+        children [
+          DEF FEMUR_L Pose {
+            translation 0 0.0225 0
+            children [
+              Shape {
+                appearance DEF SERVO_APP PBRAppearance {
+                  baseColor 0.25 0.25 0.3
+                  roughness 0.7
+                  metalness 0
+                }
+                geometry Box {
+                  size 0.02 0.045 0.016
+                }
+              }
+            ]
+          }
+          HingeJoint {
+            jointParameters HingeJointParameters {
+              anchor 0 0.045 0
+            }
+            device [
+              RotationalMotor {
+                name "knee_fl"
+                maxVelocity 8.7
+                minPosition -1.57
+                maxPosition 1.57
+                maxTorque 0.176
+              }
+            ]
+            endPoint Solid {
+              translation 0 0.045 0
+              rotation 1 0 0 0
+              children [
+                DEF TIBIA Pose {
+                  translation 0 0 -0.03
+                  children [
+                    Shape {
+                      appearance USE SERVO_APP
+                      geometry Box {
+                        size 0.014 0.014 0.06
+                      }
+                    }
+                  ]
+                }
+                DEF FOOT Pose {
+                  translation 0 0 -0.06
+                  children [
+                    Shape {
+                      appearance PBRAppearance {
+                        baseColor 0.1 0.1 0.1
+                        roughness 1
+                        metalness 0
+                      }
+                      geometry Sphere {
+                        radius 0.008
+                      }
+                    }
+                  ]
+                }
+              ]
+              name "tibia_fl"
+              boundingObject Group {
+                children [
+                  Pose {
+                    translation 0 0 -0.03
+                    children [
+                      Box {
+                        size 0.014 0.014 0.06
+                      }
+                    ]
+                  }
+                  Pose {
+                    translation 0 0 -0.06
+                    children [
+                      Sphere {
+                        radius 0.008
+                      }
+                    ]
+                  }
+                ]
+              }
+              physics Physics {
+                density -1
+                mass 0.015
+              }
+            }
+          }
+        ]
+        name "femur_fl"
+        boundingObject Pose {
+          translation 0 0.0225 0
+          children [
+            Box {
+              size 0.02 0.045 0.016
+            }
+          ]
+        }
+        physics Physics {
+          density -1
+          mass 0.02
+        }
+      }
+    }
+    DEF LEG_RL HingeJoint {
+      jointParameters HingeJointParameters {
+        axis 0 0 1
+        anchor -0.05 0.045 0
+      }
+      device [
+        RotationalMotor {
+          name "hip_rl"
+          maxVelocity 8.7
+          minPosition -1.57
+          maxPosition 1.57
+          maxTorque 0.176
+        }
+      ]
+      endPoint Solid {
+        translation -0.05 0.045 0
+        children [
+          USE FEMUR_L
+          HingeJoint {
+            jointParameters HingeJointParameters {
+              anchor 0 0.045 0
+            }
+            device [
+              RotationalMotor {
+                name "knee_rl"
+                maxVelocity 8.7
+                minPosition -1.57
+                maxPosition 1.57
+                maxTorque 0.176
+              }
+            ]
+            endPoint Solid {
+              translation 0 0.045 0
+              rotation 1 0 0 0
+              children [
+                USE TIBIA
+                USE FOOT
+              ]
+              name "tibia_rl"
+              boundingObject Group {
+                children [
+                  Pose {
+                    translation 0 0 -0.03
+                    children [
+                      Box {
+                        size 0.014 0.014 0.06
+                      }
+                    ]
+                  }
+                  Pose {
+                    translation 0 0 -0.06
+                    children [
+                      Sphere {
+                        radius 0.008
+                      }
+                    ]
+                  }
+                ]
+              }
+              physics Physics {
+                density -1
+                mass 0.015
+              }
+            }
+          }
+        ]
+        name "femur_rl"
+        boundingObject Pose {
+          translation 0 0.0225 0
+          children [
+            Box {
+              size 0.02 0.045 0.016
+            }
+          ]
+        }
+        physics Physics {
+          density -1
+          mass 0.02
+        }
+      }
+    }
+    DEF LEG_FR HingeJoint {
+      jointParameters HingeJointParameters {
+        axis 0 0 1
+        anchor 0.05 -0.045 0
+      }
+      device [
+        RotationalMotor {
+          name "hip_fr"
+          maxVelocity 8.7
+          minPosition -1.57
+          maxPosition 1.57
+          maxTorque 0.176
+        }
+      ]
+      endPoint Solid {
+        translation 0.05 -0.045 0
+        children [
+          DEF FEMUR_R Pose {
+            translation 0 -0.0225 0
+            children [
+              Shape {
+                appearance USE SERVO_APP
+                geometry Box {
+                  size 0.02 0.045 0.016
+                }
+              }
+            ]
+          }
+          HingeJoint {
+            jointParameters HingeJointParameters {
+              anchor 0 -0.045 0
+            }
+            device [
+              RotationalMotor {
+                name "knee_fr"
+                maxVelocity 8.7
+                minPosition -1.57
+                maxPosition 1.57
+                maxTorque 0.176
+              }
+            ]
+            endPoint Solid {
+              translation 0 -0.045 0
+              rotation 1 0 0 0
+              children [
+                USE TIBIA
+                USE FOOT
+              ]
+              name "tibia_fr"
+              boundingObject Group {
+                children [
+                  Pose {
+                    translation 0 0 -0.03
+                    children [
+                      Box {
+                        size 0.014 0.014 0.06
+                      }
+                    ]
+                  }
+                  Pose {
+                    translation 0 0 -0.06
+                    children [
+                      Sphere {
+                        radius 0.008
+                      }
+                    ]
+                  }
+                ]
+              }
+              physics Physics {
+                density -1
+                mass 0.015
+              }
+            }
+          }
+        ]
+        name "femur_fr"
+        boundingObject Pose {
+          translation 0 -0.0225 0
+          children [
+            Box {
+              size 0.02 0.045 0.016
+            }
+          ]
+        }
+        physics Physics {
+          density -1
+          mass 0.02
+        }
+      }
+    }
+    DEF LEG_RR HingeJoint {
+      jointParameters HingeJointParameters {
+        axis 0 0 1
+        anchor -0.05 -0.045 0
+      }
+      device [
+        RotationalMotor {
+          name "hip_rr"
+          maxVelocity 8.7
+          minPosition -1.57
+          maxPosition 1.57
+          maxTorque 0.176
+        }
+      ]
+      endPoint Solid {
+        translation -0.05 -0.045 0
+        children [
+          USE FEMUR_R
+          HingeJoint {
+            jointParameters HingeJointParameters {
+              anchor 0 -0.045 0
+            }
+            device [
+              RotationalMotor {
+                name "knee_rr"
+                maxVelocity 8.7
+                minPosition -1.57
+                maxPosition 1.57
+                maxTorque 0.176
+              }
+            ]
+            endPoint Solid {
+              translation 0 -0.045 0
+              rotation 1 0 0 0
+              children [
+                USE TIBIA
+                USE FOOT
+              ]
+              name "tibia_rr"
+              boundingObject Group {
+                children [
+                  Pose {
+                    translation 0 0 -0.03
+                    children [
+                      Box {
+                        size 0.014 0.014 0.06
+                      }
+                    ]
+                  }
+                  Pose {
+                    translation 0 0 -0.06
+                    children [
+                      Sphere {
+                        radius 0.008
+                      }
+                    ]
+                  }
+                ]
+              }
+              physics Physics {
+                density -1
+                mass 0.015
+              }
+            }
+          }
+        ]
+        name "femur_rr"
+        boundingObject Pose {
+          translation 0 -0.0225 0
+          children [
+            Box {
+              size 0.02 0.045 0.016
+            }
+          ]
+        }
+        physics Physics {
+          density -1
+          mass 0.02
+        }
+      }
+    }
+  ]
+  name "minikame"
+  boundingObject USE BODY_SHAPE
   physics Physics {
+    density -1
+    mass 0.2
   }
   controller "MinikameAvance"
   supervisor TRUE

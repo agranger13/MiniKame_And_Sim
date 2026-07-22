@@ -3,12 +3,12 @@
 
 #include "Kame.h"
 
-// Trot diagonal : pattes 1+4 en phase, pattes 2+3 en opposition de phase.
-// Numérotation : 1=avant-droite, 2=avant-gauche, 3=arrière-droite, 4=arrière-gauche.
+// Trot diagonal : pattes avant-gauche+arriere-droite en phase, avant-droite+
+// arriere-gauche en opposition. Ordre des pattes : 0=FL, 1=FR, 2=RL, 3=RR.
 GaitParams trotGait();
 
-// Démarche séquentielle ("wave") : chaque patte avance à son tour, dans
-// l'ordre avant-droite, avant-gauche, arrière-droite, arrière-gauche.
+// Demarche sequentielle ("wave") : chaque patte avance a son tour, dans
+// l'ordre avant-gauche, avant-droite, arriere-gauche, arriere-droite.
 GaitParams waveGait();
 
 #endif
