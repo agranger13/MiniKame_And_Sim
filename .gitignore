@@ -26,6 +26,7 @@ __pycache__/
 venv/
 env/
 *.egg-info/
+webots-youbot-mcp/data/status.json
 webots-youbot-mcp/
 
 # Claude Flow / claude-flow runtime (see .claude-flow/.gitignore for details)
