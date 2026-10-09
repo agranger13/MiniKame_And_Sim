@@ -35,6 +35,8 @@ GaitParams trotGait() {
     g.hipAmplitudeDeg = 20;       // ~0.35 rad
     g.kneeAmplitudeDeg = 17;      // ~0.30 rad
     g.kneeOffsetDeg = 14;         // ~0.25 rad
+    g.kneeSwingWindowDeg = 360;   // genou toujours en mouvement : trot = gait dynamique,
+                                  // 2 pattes diagonales en appui suffisent a tout instant
     setHipDir(g);
     setKneeDir(g);
     setTurnSign(g);
@@ -52,6 +54,11 @@ GaitParams waveGait() {
     g.hipAmplitudeDeg = 20;
     g.kneeAmplitudeDeg = 17;
     g.kneeOffsetDeg = 14;
+    // Gait sequentiel : une seule patte leve a la fois, les 3 autres doivent
+    // rester des appuis fixes pour la stabilite statique. Les pattes sont
+    // espacees de 90 deg -> une fenetre de 90 deg fait lever exactement une
+    // patte a la fois (les 3 autres figees a kneeOffsetDeg).
+    g.kneeSwingWindowDeg = 90;
     setHipDir(g);
     setKneeDir(g);
     setTurnSign(g);

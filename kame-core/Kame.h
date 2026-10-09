@@ -15,6 +15,10 @@ struct GaitParams {
     int hipDir[4];          // +1/-1 : sens de hanche pour que "avancer" = positif
     int kneeDir[4];         // +1/-1 : sens de genou pour que "positif" = patte ecartee/levee
     int turnSign[4];        // +1 (gauche) / -1 (droite) : cote de la patte pour le virage differentiel
+    int kneeSwingWindowDeg; // largeur (0-360) de la fenetre de levage autour du pic ; 360 = genou
+                            // toujours en mouvement (trot, dynamique) ; plus petit = genou fige a
+                            // kneeOffsetDeg en dehors de sa fenetre (necessaire pour un gait
+                            // sequentiel type wave, ou les pattes au sol doivent rester immobiles)
 };
 
 // Logique robot : n'appelle QUE le HAL, jamais Arduino.h ni webots directement.
